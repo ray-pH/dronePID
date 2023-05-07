@@ -1,0 +1,34 @@
+use std::ops;
+use wasm_bindgen::prelude::*;
+
+#[wasm_bindgen]
+#[derive(Debug, Copy)]
+pub struct V2<T> {
+    pub x : T, 
+    pub y : T,
+}
+
+impl<T> V2<T> {
+    pub fn new(x: T, y: T) -> Self {
+        Self { x, y }
+    }
+}
+
+impl<T : ops::Add<Output = T>> ops::Add for V2<T> {
+    type Output = Self;
+    fn add(self, other: Self) -> Self::Output {
+        V2::new(self.x + other.x, self.y + other.y)
+    }
+}
+impl<T : ops::Sub<Output = T>> ops::Sub for V2<T> {
+    type Output = Self;
+    fn sub(self, other: Self) -> Self::Output {
+        V2::new(self.x - other.x, self.y - other.y)
+    }
+}
+impl<T: ops::Mul<Output = T> + Copy> ops::Mul<T> for V2<T> {
+    type Output = Self;
+    fn mul(self, scalar: T) -> Self::Output {
+        V2::new(self.x * scalar, self.y * scalar)
+    }
+}
