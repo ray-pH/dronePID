@@ -49,10 +49,6 @@ impl Drone {
         };
     }
 
-    pub fn get_angle(&self) -> f64{
-        self.angle
-    }
-
     pub fn set_thrust_right(&mut self, force : f64) {
         self.thrust_right = if force > self.max_force { self.max_force } else { force };
     }
