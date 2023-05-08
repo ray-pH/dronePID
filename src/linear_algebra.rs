@@ -20,6 +20,20 @@ impl V2 {
         let ynew = self.x * angle.sin() + self.y * angle.cos();
         Self { x:xnew, y:ynew }
     }
+
+    pub fn modulus(&self) -> f32 {
+        if self.x == 0.0 { return self.y; }
+        if self.y == 0.0 { return self.x; }
+        (self.x * self.x + self.y * self.y).sqrt()
+    }
+
+    pub fn normalize(self) -> Self {
+        self * (1.0/self.modulus())
+    }
+
+    pub fn angle(&self) -> f32 {
+        self.y.atan2(self.x)
+    }
 }
 
 impl ops::Add for V2 {
