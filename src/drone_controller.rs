@@ -56,6 +56,16 @@ impl Controller {
         Controller { drone, setpoint: ZERO_V2, max_angle_dev, last_dt : 1.0, pid }
     }
 
+    pub fn change_pid_constants(&mut self,
+        kx : f64, kdx : f64, kix : f64,
+        ky : f64, kdy : f64, kiy : f64,
+        kq : f64, kdq : f64, kiq : f64,
+    ){
+        self.pid.x.set_constants(kx, kdx, kix);
+        self.pid.y.set_constants(ky, kdy, kiy);
+        self.pid.theta.set_constants(kq, kdq, kiq);
+    }
+
     pub fn set_setpoint(&mut self, x : f64, y : f64){
         self.setpoint.x = x;
         self.setpoint.y = y;
