@@ -1,4 +1,4 @@
-use super::linear_algebra::V2;
+use super::linear_algebra::{V2, clamp};
 use wasm_bindgen::prelude::*;
 
 const ZERO_V2 : V2 = V2 { x:0.0, y:0.0 };
@@ -13,6 +13,7 @@ macro_rules! console_log {
 }
 
 #[wasm_bindgen]
+#[derive(Debug, Clone, Copy)]
 pub struct Drone {
     pub pos : V2,
     vel     : V2,
@@ -20,8 +21,8 @@ pub struct Drone {
     pub angle   : f64,
     angular_vel : f64,
     pub angular_acc : f64,
-    thrust_left : f64,
-    thrust_right: f64,
+    pub thrust_left : f64,
+    pub thrust_right: f64,
     pub length  : f64,
     pub mass    : f64,
     pub inertia : f64,
@@ -35,7 +36,7 @@ impl Drone {
     pub fn new(x : f64, y : f64, angle : f64, length : f64, mass : f64) -> Self {
         let pos = V2 { x, y };
         let inertia : f64 = mass * length * length;
-        let max_force : f64 = 10.0;
+        let max_force : f64 = 10000.0;
         let gravity   = V2 { x:0.0, y:-9.81 };
         return Drone { pos, angle, length, mass, inertia,
             vel     : ZERO_V2,
@@ -50,10 +51,12 @@ impl Drone {
     }
 
     pub fn set_thrust_right(&mut self, force : f64) {
-        self.thrust_right = if force > self.max_force { self.max_force } else { force };
+        // self.thrust_right = clamp(force, 0.0, self.max_force);
+        self.thrust_right = clamp(force, -self.max_force, self.max_force);
     }
     pub fn set_thrust_left(&mut self, force : f64) {
-        self.thrust_left = if force > self.max_force { self.max_force } else { force };
+        // self.thrust_left = clamp(force, 0.0, self.max_force);
+        self.thrust_left = clamp(force, -self.max_force, self.max_force);
     }
     pub fn calc_acc(&mut self){
         // linear
