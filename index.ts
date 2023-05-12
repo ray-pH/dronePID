@@ -17,7 +17,7 @@ function draw(controller : Controller) {
         let droneheight = 20;
         let dronewidth  = drone.length * world_scale;
 
-        ctx.translate(canvas.width * 0.5, canvas.width * 0.5);
+        ctx.translate(canvas.width * 0.5, canvas.height * 0.5);
         ctx.translate(drone.pos.x * world_scale, -drone.pos.y * world_scale);
 
         // draw target angle
@@ -33,7 +33,7 @@ function draw(controller : Controller) {
     ctx.restore();
 
     ctx.save();
-        ctx.translate(canvas.width * 0.5, canvas.width * 0.5);
+        ctx.translate(canvas.width * 0.5, canvas.height * 0.5);
         ctx.fillStyle = 'blue';
         ctx.beginPath();
         ctx.arc(controller.setpoint.x * world_scale, -controller.setpoint.y * world_scale, 5, 0, 2 * Math.PI, false);
@@ -46,17 +46,58 @@ let controller : Controller;
 let i_frame : number = 0;
 function frame(){
 
-    console.log(controller.drone.thrust_left, controller.drone.thrust_right);
+    // console.log(controller.drone.thrust_left, controller.drone.thrust_right);
     // controller.apply_control();
-    controller.step_n_sim(0.01, 10);
+    controller.step_n_sim(0.005, 10);
     draw(controller);
 
-    if (i_frame > 10) return;
+    // if (i_frame > 10000) return;
     i_frame += 1;
     requestAnimationFrame(frame);
 }
 
+function initCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+
+    //debug
+    let inp = document.getElementById('text-input') as HTMLInputElement;
+    let butt = document.getElementById('button') as HTMLButtonElement;
+    butt.onclick = () => {
+        let textinp = inp.value;
+        let parsed  = textinp.replace(/;/g,',').split(',').map(parseFloat);
+        console.log(parsed);
+        if (parsed.length == 9)
+            controller.change_pid_constants(parsed[0], parsed[1], parsed[2],
+                                           parsed[3], parsed[4], parsed[5],
+                                           parsed[6], parsed[7], parsed[8]);
+    }
+}
+
+function xcoord_pixelToWorld(x : number){
+    return (x - canvas.width*0.5) / world_scale;
+}
+function ycoord_pixelToWorld(y : number){
+    return -(y - canvas.height*0.5) / world_scale;
+}
+function getMousePos(canvas : HTMLCanvasElement, evt : MouseEvent) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: xcoord_pixelToWorld(evt.clientX - rect.left),
+        y: ycoord_pixelToWorld(evt.clientY - rect.top),
+    };
+}
+canvas.addEventListener('click', function(evt) {
+    if (controller == null || controller == undefined) return;
+    var mousePos = getMousePos(canvas, evt);
+    // console.log('Mouse position: ' + mousePos.x + ',' + mousePos.y);
+    controller.set_setpoint(mousePos.x, mousePos.y);
+}, false);
+
+
 const runWasm = async () => {
+    initCanvas();
     const drone_wasm = await init("./pkg/drone_pid_bg.wasm");
 
     let x = 0.0;
@@ -69,7 +110,7 @@ const runWasm = async () => {
     drone.set_thrust_left(0);
     drone.set_thrust_right(0);
     controller = new Controller(drone);
-    controller.set_setpoint(0, 1);
+    controller.set_setpoint(1, 1);
     frame();
 };
 runWasm();

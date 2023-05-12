@@ -1,12 +1,41 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Hello World - Rust</title>
-    <script type="module" src="./index.js"></script>
-  </head>
-  <body>
-      <canvas id="canvas" width="500px" height="500px">
-      </canvas>
-  </body>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="theme-color" content="#111111">
+        <title>Drone Control</title>
+        <!-- <link rel="shortcut icon" href="./favicon.ico?" type="image/x-icon"> -->
+        <!-- <link rel="icon" href="./favicon.ico?" type="image/x-icon"> -->
+        <!-- <link rel="stylesheet" href="./style.css"> -->
+
+        <!-- <meta property="og:image" content="https://raw.githubusercontent.com/ray-pH/pixelPhysics/main/img/pxpy.png"/> -->
+        <!-- <meta property="og:description" content="Grid Based Physics Simulation"/> -->
+        <!-- <meta property="og:url"content="https://ray-ph.github.io/pixelPhysics"/> -->
+        <!-- <meta property="og:title" content="PixelPhysics"> -->
+
+        <script type="module" src="./index.js"></script>
+    </head>
+        <style>
+            body {
+                margin:0;
+                padding:0;
+                overflow: hidden;
+            }
+            canvas {
+                margin:auto;
+            }
+            .ontop {
+                position : fixed;
+                top: 0;
+            }
+        </style>
+    <body>
+        <div class="ontop">
+            <input type="text" id="text-input" value="0.5, 4.0, 0.0; 1.0, 0.8, 0.0; 0.05, 0.3, 0.0"><br>
+            <button id="button">enter</button>
+        </div>
+       <canvas id="canvas" width="100%" height="100%">
+        </canvas>
+    </body>
 </html>
