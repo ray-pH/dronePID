@@ -2,6 +2,15 @@ use std::ops;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
+pub fn clamp(val : f64, min : f64, max : f64) -> f64{
+    if val < min { return min }
+    if val > max { return max } 
+    val
+}
+
+// V2 ===========================================================
+
+#[wasm_bindgen]
 #[derive(Debug, Clone, Copy)]
 pub struct V2 {
     pub x : f64, 
@@ -33,6 +42,10 @@ impl V2 {
 
     pub fn angle(&self) -> f64 {
         self.y.atan2(self.x)
+    }
+
+    pub fn dot(&self, other : Self) -> f64 {
+        self.x*other.x + self.y*other.y
     }
 }
 
