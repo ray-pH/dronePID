@@ -51,12 +51,12 @@ impl Drone {
     }
 
     pub fn set_thrust_right(&mut self, force : f64) {
-        // self.thrust_right = clamp(force, 0.0, self.max_force);
-        self.thrust_right = clamp(force, -self.max_force, self.max_force);
+        self.thrust_right = clamp(force, 0.0, self.max_force);
+        // self.thrust_right = clamp(force, -self.max_force, self.max_force);
     }
     pub fn set_thrust_left(&mut self, force : f64) {
-        // self.thrust_left = clamp(force, 0.0, self.max_force);
-        self.thrust_left = clamp(force, -self.max_force, self.max_force);
+        self.thrust_left = clamp(force, 0.0, self.max_force);
+        // self.thrust_left = clamp(force, -self.max_force, self.max_force);
     }
     pub fn calc_acc(&mut self){
         // linear
