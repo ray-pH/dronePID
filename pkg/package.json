@@ -1,0 +1,14 @@
+{
+  "name": "drone_pid",
+  "version": "0.1.0",
+  "files": [
+    "drone_pid_bg.wasm",
+    "drone_pid.js",
+    "drone_pid.d.ts"
+  ],
+  "module": "drone_pid.js",
+  "types": "drone_pid.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
